@@ -9,8 +9,9 @@ services:
       - jaeger
 
   fluentbit:
-    build:
-      context: fluentbit
+    image: fluent/fluent-bit:latest
+    volumes:
+      - ./fluentbit/fluent.conf:/fluent-bit/etc/fluent-bit.conf
     restart: always
     depends_on:
       jaeger:

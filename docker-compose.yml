@@ -6,15 +6,13 @@ services:
       context: app
     depends_on:
       - fluentbit
-      - jaeger
 
   fluentbit:
-    build:
-      context: fluentbit
+    image: fluent/fluent-bit:latest
+    volumes:
+      - ./fluentbit/fluent.conf:/fluent-bit/etc/fluent-bit.conf
     restart: always
     depends_on:
-      jaeger:
-        condition: service_started
       prometheus:
         condition: service_started
       collector:
@@ -39,27 +37,6 @@ services:
       - ./grafana/dashboards/:/etc/grafana/provisioning/dashboards
       - ./grafana/dashboard-files/:/docker-compose/dashboards/
     restart: always
-
-  jaeger:
-    image: jaegertracing/all-in-one:1.35
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-    ports:
-      - "16686:16686"
-
-  collector:
-    image: otel/opentelemetry-collector
-    command: ["--config=/etc/otel-collector-config.yaml"]
-    volumes:
-      - ./collector/logs.yaml:/etc/otel-collector-config.yaml
-
-  vivo:
-    image: ghcr.io/calyptia/vivo
-    environment:
-      - VIVO_TOKEN=changemeuig4phooch1theeheeneishahlarood5eiveiDeezie2eeng5IY4Doh4chee7eeB
-    ports:
-      - "5489:5489"
-      - "24224:24224"
 
 volumes:
   prometheus-data:

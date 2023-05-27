@@ -1,6 +1,7 @@
 version: '3.3'
 
 services:
+
   demo_app:
     build:
       context: app
@@ -41,6 +42,12 @@ services:
       - ./grafana/dashboard-files/:/docker-compose/dashboards/
     restart: always
 
+  loki:
+    image: grafana/loki:2.8.2
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
   jaeger:
     image: jaegertracing/all-in-one:1.35
     environment:
@@ -53,14 +60,6 @@ services:
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./collector/logs.yaml:/etc/otel-collector-config.yaml
-
-  vivo:
-    image: ghcr.io/calyptia/vivo
-    environment:
-      - VIVO_TOKEN=changemeuig4phooch1theeheeneishahlarood5eiveiDeezie2eeng5IY4Doh4chee7eeB
-    ports:
-      - "5489:5489"
-      - "24224:24224"
 
 volumes:
   prometheus-data:

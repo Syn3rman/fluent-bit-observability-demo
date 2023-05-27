@@ -3,4 +3,5 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 COPY . .
-CMD ["/bin/bash", "-c", "nohup node tracing.js &; nohup node metrics.js &"]
+RUN chmod 755 run.sh
+CMD ["/bin/bash", "-c", "./run.sh"]

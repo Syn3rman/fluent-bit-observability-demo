@@ -1,14 +1,6 @@
 version: '3.3'
 
 services:
-
-  demo_app:
-    build:
-      context: app
-    depends_on:
-      - fluentbit
-      - jaeger
-
   fluentbit:
     image: fluent/fluent-bit:latest
     volumes:
@@ -21,14 +13,6 @@ services:
         condition: service_started
       collector:
         condition: service_started
-
-  prometheus:
-    image: prom/prometheus
-    volumes:
-      - ./prometheus:/etc/prometheus
-      - prometheus-data:/prometheus
-    command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
-    restart: always
 
   grafana:
     image: grafana/grafana
@@ -47,13 +31,6 @@ services:
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
-
-  jaeger:
-    image: jaegertracing/all-in-one:1.35
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-    ports:
-      - "16686:16686"
 
   collector:
     image: otel/opentelemetry-collector
